@@ -1,47 +1,42 @@
 //A function for determining the longest common substring of two strings 
 
-function lcs(word1, word2){
-    var max = 0;
-    var index = 0;
-    var lcsarr = new Array(word1.length+1);
+var lcs = function(string1, string2) {
+	var comparsions = []; //2D array for the char comparsions ...
+	var maxSubStrLength = 0;
+	var lastMaxSubStrIndex = -1, i, j, char1, char2, startIndex;
 
-    for(var i = 0; i <= word1.length+1; i++){
-        lcsarr[i] = new Array(word2.length+1);
+	for (i = 0; i < string1.length; ++i) {
+		comparsions[i] = new Array();
 
-        for(var j = 0; j <= word2.length+1; j++){
-            lcsarr[i][j] = 0;
-        }
-    }
+		for (j = 0; j < string2.length; ++j) {
+			char1 = string1.charAt(i);
+			char2 = string2.charAt(j);
 
-    for(var i = 0; i <= word1.length; i++){
-        for(var j = 0; j <= word2.length; j++){
-            if(i == 0 || j == 0){
-                lcsarr[i][j] = 0;
-            }
-            else{
-                if(word1[i-1] == word2[j-1]){
-                    lcsarr[i][j] = lcsarr[i-1][j-1] + 1;
-                }
-                else {
-                    lcsarr[i][j] = 0;
-                }
-            }
-            if (max < lcsarr[i][j]){
-                max = lcsarr[i][j];
-                index = i;
-            }
-        }
-    }
-    var str = "";
-    if (max == 0){
-        return "";
-    }
-    else {
-        for (var i = index-max; i <=max; i++){
-            str += word2[i];
-        }
-        return str;
-    }
+			if (char1 === char2) {
+				if (i > 0 && j > 0) {
+					comparsions[i][j] = comparsions[i - 1][j - 1] + 1;
+				} else {
+					comparsions[i][j] = 1;
+				}
+			} else {
+				comparsions[i][j] = 0;
+			}
+
+			if (comparsions[i][j] > maxSubStrLength) {
+				maxSubStrLength = comparsions[i][j];
+				lastMaxSubStrIndex = i;
+			}
+		}
+	}
+
+	if (maxSubStrLength > 0) {
+		startIndex = lastMaxSubStrIndex - maxSubStrLength + 1;
+
+		return string1.substr(startIndex, maxSubStrLength);
+	}
+
+	return null;
 }
 
-console.log(lcs("raven", "havoc"));
+// Test code 
+console.log(lcs("SQLMTutorialnjection", "SQLTutorial"));
